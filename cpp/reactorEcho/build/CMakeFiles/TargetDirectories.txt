@@ -1,0 +1,3 @@
+/home/zhangzf/recipes/reactorEcho/build/CMakeFiles/rebuild_cache.dir
+/home/zhangzf/recipes/reactorEcho/build/CMakeFiles/edit_cache.dir
+/home/zhangzf/recipes/reactorEcho/build/CMakeFiles/reactorEchoServer.dir

@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zhangzf/recipes/reactorEcho/EchoServer.cpp
+EchoServer.hpp
+/home/zhangzf/recipes/reactorEcho/EchoServer.hpp
+sys/socket.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+sys/epoll.h
+-
+unistd.h
+-
+strings.h
+-
+iostream
+-
+
+/home/zhangzf/recipes/reactorEcho/EchoServer.hpp
+string
+-
+thread
+-
+vector
+-
+queue
+-
+mutex
+-
+condition_variable
+-
+
+/home/zhangzf/recipes/reactorEcho/echoServerMain.cpp
+EchoServer.hpp
+/home/zhangzf/recipes/reactorEcho/EchoServer.hpp
+

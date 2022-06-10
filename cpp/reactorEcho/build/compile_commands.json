@@ -1,0 +1,13 @@
+[
+{
+  "directory": "/home/zhangzf/recipes/reactorEcho/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -pthread -o CMakeFiles/reactorEchoServer.dir/echoServerMain.cpp.o -c /home/zhangzf/recipes/reactorEcho/echoServerMain.cpp",
+  "file": "/home/zhangzf/recipes/reactorEcho/echoServerMain.cpp"
+},
+
+{
+  "directory": "/home/zhangzf/recipes/reactorEcho/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -pthread -o CMakeFiles/reactorEchoServer.dir/EchoServer.cpp.o -c /home/zhangzf/recipes/reactorEcho/EchoServer.cpp",
+  "file": "/home/zhangzf/recipes/reactorEcho/EchoServer.cpp"
+}
+]
