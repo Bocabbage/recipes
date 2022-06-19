@@ -1,5 +1,4 @@
 #pragma once
-#include <mutex>
 
 class Singleton
 {
@@ -16,7 +15,5 @@ private:
     Singleton() = default;
     Singleton(const Singleton&) = delete;
     Singleton& operator()(const Singleton&) = delete;
-
-    // static std::mutex mtx_;
 
 };
