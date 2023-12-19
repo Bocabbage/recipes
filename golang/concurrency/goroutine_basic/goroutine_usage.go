@@ -30,7 +30,7 @@ func SpinnerTest() {
 	fmt.Printf("\rFibonacci(%d) = %d\n", n, fibN)
 }
 
-// [todo] basic-usage for unbuff-Channel:
+// ----- Basic-usage for unbuff-Channel -----
 
 // definition: 定义 write channel
 func counterWorker(out chan<- int) {
@@ -48,7 +48,6 @@ func squarerWorker(in <-chan int, out chan<- int) {
 	}
 }
 
-// basic-usage for Channel:
 func PipelineTest() {
 	naturals := make(chan int)
 	squares := make(chan int)
@@ -87,4 +86,64 @@ func PipelineTestV2() {
 	for x := range squares {
 		fmt.Println(x)
 	}
+}
+
+// ---- Wait for finish
+func WaitRoutineTest() {
+	// 用于同步的无语义channel:
+	ch := make(chan struct{})
+
+	for i := 0; i < 5; i++ {
+		go func(ivar int) {
+			// 闭包获取ch
+			time.Sleep(1 * time.Second)
+			fmt.Printf("%d\n", ivar)
+			ch <- struct{}{}
+		}(i)
+	}
+
+	// Join
+	for i := 0; i < 5; i++ {
+		<-ch
+	}
+
+	fmt.Println("Finish!")
+}
+
+// 带 error-handle 的 Join
+type item struct {
+	param int
+	err   error
+}
+
+func stringWorker(s string) (int, error) {
+	var errorResult error
+	fmt.Println(s)
+	return 0, errorResult
+}
+
+func WaitRoutineWithErrorTest() ([]int, error) {
+	// 在 channel 中带入 error 信息，并使用 buff-channel（否则一个error routine就可能导致goroutinue leak）
+	ch := make(chan item, 5)
+
+	for i := 0; i < 5; i++ {
+		go func() {
+			var it item
+			it.param, it.err = stringWorker("Hey!")
+			ch <- it
+		}()
+	}
+
+	// Join
+	result := make([]int, 0)
+	for i := 0; i < 5; i++ {
+		it := <-ch
+		if it.err != nil {
+			return nil, it.err
+		}
+		result = append(result, it.param)
+	}
+
+	fmt.Println(result)
+	return result, nil
 }
