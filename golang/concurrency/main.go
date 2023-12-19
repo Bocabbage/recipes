@@ -9,5 +9,5 @@ func main() {
 	mmodel.AtomicTestMutex()
 	// mmodel.SequenceConsistency()
 	// gbasic.SpinnerTest()
-	gbasic.PipelineTest()
+	gbasic.PipelineTestV2()
 }

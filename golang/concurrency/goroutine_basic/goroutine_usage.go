@@ -32,6 +32,22 @@ func SpinnerTest() {
 
 // [todo] basic-usage for unbuff-Channel:
 
+// definition: 定义 write channel
+func counterWorker(out chan<- int) {
+	defer close(out)
+	for x := 0; x <= 20; x++ {
+		out <- x
+	}
+}
+
+// definition: 定义 read channel + write channel
+func squarerWorker(in <-chan int, out chan<- int) {
+	defer close(out)
+	for x := range in {
+		out <- x * x
+	}
+}
+
 // basic-usage for Channel:
 func PipelineTest() {
 	naturals := make(chan int)
@@ -48,14 +64,27 @@ func PipelineTest() {
 	// Squarer
 	go func() {
 		defer close(squares)
-		for {
-			x := <-naturals
+		// 不停执行 x <- squares，直到chan-closed
+		for x := range naturals {
 			squares <- x * x
 		}
 	}()
 
 	// Printer
-	for {
-		fmt.Println(<-squares)
+	for x := range squares {
+		fmt.Println(x)
+	}
+}
+
+func PipelineTestV2() {
+	naturals := make(chan int)
+	squares := make(chan int)
+
+	go counterWorker(naturals)
+	go squarerWorker(naturals, squares)
+
+	// Printer
+	for x := range squares {
+		fmt.Println(x)
 	}
 }
