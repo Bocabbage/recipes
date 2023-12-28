@@ -17,22 +17,21 @@ func mockWriteRedis(ctx context.Context) {
 			// [!] 实际场景中需要需要将可能会一直阻塞的部分抽出到select选择中，
 			// 防止在此处阻塞导致无法执行到ctx.Done()，goroutine无法正常退出
 			// example:
-		// case [redis io channel]:
-		// 	if [some-condition to check redis io result] {
-		// 		select {
-		// 		case <-ctx.Done():
-		// 			return
-		// 		case [some-case]:
-		//		...
-		// 		}
-		// 	}
+			// case [redis io channel]:
+			// 	if [some-condition to check redis io result] {
+			// 		select {
+			// 		case <-ctx.Done():
+			// 			return
+			// 		case [some-case]:
+			//		...
+			// 		}
+			// 	}
 		}
 
-			fmt.Println("Write Redis running")
-			// mock: redis io
-			// ...
-			time.Sleep(2 * time.Second)
-		}
+		fmt.Println("Write Redis running")
+		// mock: redis io
+		// ...
+		time.Sleep(2 * time.Second)
 	}
 }
 
