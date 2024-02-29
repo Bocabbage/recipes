@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = "executable_tool"
+version = "0.1.0"
+dependencies = [
+    "requests",
+    'importlib-metadata; python_version<"3.10"',
+]
+description = "build system demo"
+
+[tool.setuptools.package-dir]
+
+
+
+[project.scripts]
+hello-world = "execute_pacakge.exe_entrypoint:hello_world"
+another-exe = "execute_pacakge.exe_entrypoint:another_exe"

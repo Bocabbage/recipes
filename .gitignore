@@ -3,3 +3,5 @@
 **/a.out
 node_modules/
 .DS_Store
+build/
+*.egg-info/
