@@ -32,10 +32,13 @@ func StructTagCheck() {
 	testObject := testStruct{"bocabbage", 233, 1}
 	typeOfObj := reflect.TypeOf(testObject)
 	for i := 0; i < typeOfObj.NumField(); i++ {
+		// get field
 		field := typeOfObj.Field(i)
+		// check value
 		checkCanCall(reflect.ValueOf(testObject).Field(i))
-		fmt.Printf("Field: %s, Tag value of tag_1: %s\n", field.Name, field.Tag.Get("tag_1"))
-		fmt.Printf("Field: %s, Tag value of tag_2: %s\n", field.Name, field.Tag.Get("tag_2"))
+		// check specific tag
+		fmt.Printf("Tag value of tag_1: %s\n", field.Tag.Get("tag_1"))
+		fmt.Printf("Tag value of tag_2: %s\n", field.Tag.Get("tag_2"))
 	}
 }
 
