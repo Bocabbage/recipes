@@ -1,6 +1,6 @@
 /sort
 **/.vscode
-**/a.out
+**/*.out
 node_modules/
 .DS_Store
 build/
