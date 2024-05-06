@@ -63,9 +63,7 @@ private:
 
     void release()
     {
-        (*refCount_)--;
-
-        if(*refCount_ == 0)
+        if(refCount_->fetch_sub(1) == 1)
         {
             delete rawPointer_;
             delete refCount_;
