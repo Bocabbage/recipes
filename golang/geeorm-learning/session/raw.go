@@ -1,6 +1,7 @@
 package session
 
 import (
+	"bocabbage/geeorm-learn/clause"
 	"bocabbage/geeorm-learn/dialect"
 	"bocabbage/geeorm-learn/log"
 	"bocabbage/geeorm-learn/schema"
@@ -13,6 +14,7 @@ type Session struct {
 	db       *sql.DB
 	dialect  dialect.Dialect // dialect is by-session
 	refTable *schema.Schema
+	clause   clause.Clause
 	sql      strings.Builder
 	sqlVars  []interface{}
 }
@@ -39,6 +41,7 @@ func (s *Session) Raw(sql string, values ...interface{}) *Session {
 
 // 清空 sql 和参数
 func (s *Session) Clear() {
+	s.clause = clause.Clause{}
 	s.sql.Reset()
 	s.sqlVars = nil
 }

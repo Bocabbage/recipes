@@ -26,7 +26,7 @@ func (schema *Schema) GetField(name string) *Field {
 	return schema.fieldMap[name]
 }
 
-// 用于将任意 struct 解析到 Schema 对象
+// [定义解析] 用于将任意 struct 解析到 Schema 对象
 // dest: 对象的指针
 func Parse(dest interface{}, d dialect.Dialect) *Schema {
 	// Indirect：入参是对象指针，需要获取其指向的实例
@@ -56,4 +56,16 @@ func Parse(dest interface{}, d dialect.Dialect) *Schema {
 		}
 	}
 	return schema
+}
+
+// [数值解析] 用于将具体 custom 对象的值根据 Schema 解析为对应的 value slice
+func (schema *Schema) RecordValues(dest interface{}) []interface{} {
+	destValue := reflect.Indirect(reflect.ValueOf(dest))
+	var fieldValues []interface{}
+
+	for _, field := range schema.Fields {
+		fieldValues = append(fieldValues, destValue.FieldByName(field.Name).Interface())
+	}
+
+	return fieldValues
 }
