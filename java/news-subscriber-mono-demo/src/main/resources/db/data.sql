@@ -1,0 +1,1 @@
+INSERT INTO `article` (uid, title, content) VALUES (1, 'hello', 'hello content');
