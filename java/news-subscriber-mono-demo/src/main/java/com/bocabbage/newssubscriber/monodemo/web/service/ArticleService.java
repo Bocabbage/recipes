@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ArticleService {
         articleRepo.save(article);
     }
 
+    @Transactional // 对 JPA 触发 onUpdate 而言是必要的
     @Caching(evict = {
             @CacheEvict(value = "article", key = "#article.Uid"),
             @CacheEvict(value = "shortArticleListCache")
@@ -30,6 +32,7 @@ public class ArticleService {
     public void updateArticle(Article article) {
         Article oldArticle = articleRepo.findByUid(article.getUid());
         article.setId(oldArticle.getId());
+        article.setCreateTime(oldArticle.getCreateTime());
         articleRepo.saveAndFlush(article);
     }
 

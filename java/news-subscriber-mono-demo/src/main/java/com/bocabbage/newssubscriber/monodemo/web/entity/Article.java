@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data // lombok，提供 getter/setter/toString
@@ -30,7 +31,7 @@ public class Article implements BaseEntity {
     private String content;
 
 //    @Column(name = "tags", columnDefinition = "json")
-//    private ArrayList<String> tags;
+//    private List<String> tags;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -42,6 +43,20 @@ public class Article implements BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
+    // Time update logic
+    @PrePersist
+    protected void onCreate() {
+        var time = LocalDateTime.now();
+        this.createTime = time;
+        this.updateTime = time;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updateTime = LocalDateTime.now();
+    }
+
+    // For cache data (de)serializer
     @JsonCreator
     public Article(
         @JsonProperty("id")Long id,

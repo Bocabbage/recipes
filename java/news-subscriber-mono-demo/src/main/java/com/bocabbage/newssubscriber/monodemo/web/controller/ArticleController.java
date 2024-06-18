@@ -2,32 +2,53 @@ package com.bocabbage.newssubscriber.monodemo.web.controller;
 
 import com.bocabbage.newssubscriber.monodemo.web.entity.Article;
 import com.bocabbage.newssubscriber.monodemo.web.service.ArticleService;
+import com.bocabbage.newssubscriber.monodemo.web.validator.ArticleParam;
+import com.bocabbage.newssubscriber.monodemo.web.validator.CreateArticleValidGroup;
+import com.bocabbage.newssubscriber.monodemo.web.validator.UpdateArticleValidGroup;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.security.SecureRandom;
 
 @RestController
 @RequestMapping("/newssub/v1/article")
 //@CrossOrigin(origins="*")
 public class ArticleController {
+    // For uid generation
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     @Autowired
     private ArticleService articleSvc;
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createArticle(@RequestBody Article article) {
-        article.setCreateTime(LocalDateTime.now());
-        article.setUpdateTime(LocalDateTime.now());
+    public Long createArticle(@RequestBody @Validated(CreateArticleValidGroup.class) ArticleParam articleParam) {
+        var article = new Article();
+        // Generate uid
+        article.setUid(secureRandom.nextLong() & Long.MAX_VALUE);
+        article.setTitle(articleParam.getTitle());
+        article.setContent(articleParam.getContent());
+//        article.setCreateTime(LocalDateTime.now());
+//        article.setUpdateTime(LocalDateTime.now());
         articleSvc.createArticle(article);
+        return article.getUid();
     }
 
     // 全量资源替换，如果是部分字段替换可以用 Patch request 来实现
     @PutMapping("/{uid}")
-    public void updateArticle(@RequestBody Article article) {
-        article.setUpdateTime(LocalDateTime.now());
+    public void updateArticle(
+            @PathVariable("uid") Long uid,
+            @RequestBody @Validated(UpdateArticleValidGroup.class) ArticleParam articleParam
+    ) {
+        var article = new Article();
+        article.setUid(uid);
+        article.setTitle(articleParam.getTitle());
+        article.setContent(articleParam.getContent());
         articleSvc.updateArticle(article);
     }
 
@@ -44,8 +65,8 @@ public class ArticleController {
 
     @GetMapping("/list")
     public Iterable<Article> listArticlePaging(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
+            @RequestParam("page") @PositiveOrZero int page,
+            @RequestParam("size") @Positive int size
     ) {
         return articleSvc.listArticles(page, size).getContent();
     }
