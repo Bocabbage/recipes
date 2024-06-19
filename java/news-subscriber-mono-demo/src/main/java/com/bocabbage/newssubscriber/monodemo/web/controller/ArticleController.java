@@ -5,7 +5,7 @@ import com.bocabbage.newssubscriber.monodemo.web.service.ArticleService;
 import com.bocabbage.newssubscriber.monodemo.web.validator.ArticleParam;
 import com.bocabbage.newssubscriber.monodemo.web.validator.CreateArticleValidGroup;
 import com.bocabbage.newssubscriber.monodemo.web.validator.UpdateArticleValidGroup;
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +25,23 @@ public class ArticleController {
     @Autowired
     private ArticleService articleSvc;
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Long createArticle(@RequestBody @Validated(CreateArticleValidGroup.class) ArticleParam articleParam) {
+    public Long createArticle(@Validated(CreateArticleValidGroup.class) @RequestBody ArticleParam articleParam) {
         var article = new Article();
         // Generate uid
         article.setUid(secureRandom.nextLong() & Long.MAX_VALUE);
         article.setTitle(articleParam.getTitle());
         article.setContent(articleParam.getContent());
-//        article.setCreateTime(LocalDateTime.now());
-//        article.setUpdateTime(LocalDateTime.now());
         articleSvc.createArticle(article);
         return article.getUid();
     }
 
     // 全量资源替换，如果是部分字段替换可以用 Patch request 来实现
-    @PutMapping("/{uid}")
-    public void updateArticle(
-            @PathVariable("uid") Long uid,
-            @RequestBody @Validated(UpdateArticleValidGroup.class) ArticleParam articleParam
-    ) {
+    @PutMapping
+    public void updateArticle(@Validated(UpdateArticleValidGroup.class) @RequestBody ArticleParam articleParam) {
         var article = new Article();
-        article.setUid(uid);
+        article.setUid(articleParam.getUid());
         article.setTitle(articleParam.getTitle());
         article.setContent(articleParam.getContent());
         articleSvc.updateArticle(article);
@@ -54,12 +49,12 @@ public class ArticleController {
 
     @DeleteMapping("/{uid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteArticle(@PathVariable("uid") Long uid) {
+    public void deleteArticle(@PathVariable("uid") @Min(1) Long uid) {
         articleSvc.deleteArticle(uid);
     }
 
     @GetMapping("/{uid}")
-    public Article getArticle(@PathVariable("uid") Long uid) {
+    public Article getArticle(@PathVariable("uid") @Min(1) Long uid) {
         return articleSvc.getArticle(uid);
     }
 

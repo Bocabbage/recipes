@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional // 对 JPA 触发 onUpdate 而言是必要的
 public class ArticleService {
 
     @Autowired
@@ -24,7 +25,6 @@ public class ArticleService {
         articleRepo.save(article);
     }
 
-    @Transactional // 对 JPA 触发 onUpdate 而言是必要的
     @Caching(evict = {
             @CacheEvict(value = "article", key = "#article.Uid"),
             @CacheEvict(value = "shortArticleListCache")
